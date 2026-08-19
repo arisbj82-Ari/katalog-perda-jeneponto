@@ -119,4 +119,110 @@
             background-color: #1e3a8a;
             color: white;
             padding: 20px;
-            text-align
+            text-align: center;
+            margin-top: 40px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- HEADER -->
+    <header>
+        <h1>Katalog Peraturan Daerah</h1>
+        <p>Sekretariat DPRD Kabupaten Jeneponto</p>
+    </header>
+
+    <main>
+        <!-- KOTAK SELAMAT DATANG -->
+        <div class="welcome-box">
+            <h2>Selamat Datang</h2>
+            <p>Katalog digital Peraturan Daerah Kabupaten Jeneponto.</p>
+        </div>
+
+        <!-- BAGIAN KATALOG & PENCARIAN -->
+        <section class="katalog-section">
+            <h2>📚 Daftar Peraturan Daerah</h2>
+            
+            <!-- Input Pencarian -->
+            <div class="search-container">
+                <input type="text" id="searchInput" placeholder="🔍 Cari nomor, judul, atau kata kunci...">
+            </div>
+            
+            <div class="perda-list">
+                
+                <!-- PERDA 1 -->
+                <div class="perda-item">
+                    <h3>Perda No. 01 Tahun 2024</h3>
+                    <div class="perda-meta">
+                        <span class="badge badge-kategori">APBD</span>
+                        <span class="badge badge-berlaku">Berlaku</span>
+                        <span>📅 20 Desember 2024</span>
+                    </div>
+                    <p class="perda-desc">
+                        Tentang Anggaran Pendapatan dan Belanja Daerah Kabupaten Jeneponto Tahun Anggaran 2025.
+                    </p>
+                </div>
+
+                <!-- PERDA 2 -->
+                <div class="perda-item">
+                    <h3>Perda No. 02 Tahun 2024</h3>
+                    <div class="perda-meta">
+                        <span class="badge badge-kategori">Retribusi</span>
+                        <span class="badge badge-berlaku">Berlaku</span>
+                        <span>📅 15 Agustus 2024</span>
+                    </div>
+                    <p class="perda-desc">
+                        Tentang Retribusi Daerah Kabupaten Jeneponto.
+                    </p>
+                </div>
+
+                <!-- PERDA 3 -->
+                <div class="perda-item">
+                    <h3>Perda No. 05 Tahun 2023</h3>
+                    <div class="perda-meta">
+                        <span class="badge badge-kategori">Tata Ruang</span>
+                        <span class="badge badge-berlaku">Berlaku</span>
+                        <span>📅 10 Mei 2023</span>
+                    </div>
+                    <p class="perda-desc">
+                        Tentang Rencana Tata Ruang Wilayah (RTRW) Kabupaten Jeneponto Tahun 2023-2043.
+                    </p>
+                </div>
+
+            </div>
+        </section>
+    </main>
+
+    <!-- FOOTER -->
+    <footer>
+        <p>&copy; 2026 Sekretariat DPRD Kabupaten Jeneponto</p>
+    </footer>
+
+    <!-- JAVASCRIPT (LOGIKA PENCARIAN) -->
+    <script>
+        // Ambil elemen input pencarian
+        const searchInput = document.getElementById('searchInput');
+        
+        // Ambil semua kartu perda
+        const perdaItems = document.querySelectorAll('.perda-item');
+
+        // Saat user mengetik sesuatu...
+        searchInput.addEventListener('input', function() {
+            const keyword = this.value.toLowerCase(); // Ubah huruf jadi kecil semua
+            
+            // Cek setiap kartu perda satu per satu
+            perdaItems.forEach(item => {
+                const textContent = item.textContent.toLowerCase(); // Ambil teks dalam kartu
+                
+                // Jika teks mengandung kata kunci, tampilkan. Jika tidak, sembunyikan.
+                if (textContent.includes(keyword)) {
+                    item.style.display = 'block';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        });
+    </script>
+
+</body>
+</html>
