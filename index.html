@@ -5,9 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Katalog Perda - Kabupaten Jeneponto</title>
     
-    <!-- CSS DIGABUNGKAN DI SINI -->
     <style>
-        /* Reset dasar */
         * {
             margin: 0;
             padding: 0;
@@ -21,7 +19,6 @@
             line-height: 1.6;
         }
 
-        /* Header */
         header {
             background: linear-gradient(135deg, #1e3a8a, #2563eb);
             color: white;
@@ -40,7 +37,6 @@
             opacity: 0.9;
         }
 
-        /* Konten utama */
         main {
             max-width: 900px;
             margin: 30px auto;
@@ -53,6 +49,7 @@
             border-radius: 10px;
             box-shadow: 0 2px 6px rgba(0,0,0,0.08);
             text-align: center;
+            margin-bottom: 30px;
         }
 
         .welcome-box h2 {
@@ -60,7 +57,89 @@
             margin-bottom: 15px;
         }
 
-        /* Footer */
+        /* Section Katalog */
+        .katalog-section {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+        }
+
+        .katalog-section h2 {
+            color: #1e3a8a;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #2563eb;
+        }
+
+        /* Daftar Perda */
+        .perda-list {
+            display: grid;
+            gap: 20px;
+        }
+
+        .perda-item {
+            background: #f8fafc;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #2563eb;
+            transition: transform 0.2s;
+        }
+
+        .perda-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .perda-item h3 {
+            color: #1e3a8a;
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+        }
+
+        .perda-meta {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 10px;
+            font-size: 0.9rem;
+            color: #64748b;
+        }
+
+        .perda-meta span {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .badge-berlaku {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .badge-dicabut {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .badge-kategori {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        .perda-desc {
+            color: #475569;
+            font-size: 0.9rem;
+            margin-top: 10px;
+        }
+
         footer {
             background-color: #1e3a8a;
             color: white;
@@ -72,22 +151,66 @@
 </head>
 <body>
 
-    <!-- BAGIAN HEADER (Atas) -->
     <header>
         <h1>Katalog Peraturan Daerah</h1>
         <p>Sekretariat DPRD Kabupaten Jeneponto</p>
     </header>
 
-    <!-- BAGIAN KONTEN UTAMA (Tengah) -->
     <main>
         <div class="welcome-box">
             <h2>Selamat Datang</h2>
             <p>Ini adalah katalog digital Peraturan Daerah Kabupaten Jeneponto.</p>
             <p>Website ini sedang dalam pengembangan...</p>
         </div>
+
+        <section class="katalog-section">
+            <h2>📚 Daftar Peraturan Daerah</h2>
+            
+            <div class="perda-list">
+                
+                <!-- Perda 1 -->
+                <div class="perda-item">
+                    <h3>Perda No. 01 Tahun 2024</h3>
+                    <div class="perda-meta">
+                        <span class="badge badge-kategori">APBD</span>
+                        <span class="badge badge-berlaku">Berlaku</span>
+                        <span>📅 20 Desember 2024</span>
+                    </div>
+                    <p class="perda-desc">
+                        Tentang Anggaran Pendapatan dan Belanja Daerah Kabupaten Jeneponto Tahun Anggaran 2025.
+                    </p>
+                </div>
+
+                <!-- Perda 2 -->
+                <div class="perda-item">
+                    <h3>Perda No. 02 Tahun 2024</h3>
+                    <div class="perda-meta">
+                        <span class="badge badge-kategori">Retribusi</span>
+                        <span class="badge badge-berlaku">Berlaku</span>
+                        <span>📅 15 Agustus 2024</span>
+                    </div>
+                    <p class="perda-desc">
+                        Tentang Retribusi Daerah Kabupaten Jeneponto.
+                    </p>
+                </div>
+
+                <!-- Perda 3 -->
+                <div class="perda-item">
+                    <h3>Perda No. 05 Tahun 2023</h3>
+                    <div class="perda-meta">
+                        <span class="badge badge-kategori">Tata Ruang</span>
+                        <span class="badge badge-berlaku">Berlaku</span>
+                        <span> 10 Mei 2023</span>
+                    </div>
+                    <p class="perda-desc">
+                        Tentang Rencana Tata Ruang Wilayah (RTRW) Kabupaten Jeneponto Tahun 2023-2043.
+                    </p>
+                </div>
+
+            </div>
+        </section>
     </main>
 
-    <!-- BAGIAN FOOTER (Bawah) -->
     <footer>
         <p>&copy; 2026 Sekretariat DPRD Kabupaten Jeneponto</p>
     </footer>
