@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Katalog Perda - Kabupaten Jeneponto</title>
     <style>
-        /* --- CSS TAMPILAN --- */
+        /* --- CSS TAMPILAN PROFESIONAL --- */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         
         body { 
@@ -121,23 +121,19 @@
     <main>
         <!-- BAGIAN FILTER & PENCARIAN -->
         <div class="filter-box">
-            <input type="text" id="searchInput" placeholder="🔍 Cari judul atau nomor...">
+            <input type="text" id="searchInput" placeholder=" Cari judul atau nomor...">
             
             <select id="filterTahun">
                 <option value="">Semua Tahun</option>
-                <!-- Opsi tahun akan diisi otomatis oleh JavaScript -->
             </select>
             
             <select id="filterKategori">
                 <option value="">Semua Kategori</option>
-                <!-- Opsi kategori akan diisi otomatis oleh JavaScript -->
             </select>
         </div>
 
         <!-- TEMPAT DAFTAR PERDA MUNCUL -->
-        <div id="containerPerda" class="perda-list">
-            <!-- Data akan muncul di sini secara otomatis -->
-        </div>
+        <div id="containerPerda" class="perda-list"></div>
     </main>
 
     <!-- FOOTER -->
@@ -147,43 +143,49 @@
 
     <!-- JAVASCRIPT LOGIC (DATA & FUNGSI) -->
     <script>
-        // 1. DATA PERDA (Bisa ditambah/diedit di sini)
+        // =====================================================================
+        // ⚠️ AREA DATA PERDA - SILAKAN EDIT/DITAMBAH DI SINI SESUAI JDIH
+        // =====================================================================
         const allData = [
+            // CONTOH 1: APBD
             {
-                "nomor": "01",
+                "nomor": "06",
                 "tahun": "2024",
-                "judul": "APBD Tahun Anggaran 2025",
+                "judul": "APBD Kabupaten Jeneponto Tahun Anggaran 2025",
                 "kategori": "APBD",
                 "status": "Berlaku",
                 "tanggal": "20 Desember 2024",
-                "deskripsi": "Mengatur Anggaran Pendapatan dan Belanja Daerah Kabupaten Jeneponto."
+                "deskripsi": "Peraturan Daerah tentang Anggaran Pendapatan dan Belanja Daerah."
             },
+            // CONTOH 2: RETRIBUSI
             {
                 "nomor": "02",
                 "tahun": "2024",
-                "judul": "Retribusi Daerah",
+                "judul": "Retribusi Jasa Umum dan Usaha Daerah",
                 "kategori": "Retribusi",
                 "status": "Berlaku",
                 "tanggal": "15 Agustus 2024",
-                "deskripsi": "Tentang jenis dan tarif retribusi jasa umum serta usaha daerah."
+                "deskripsi": "Penyesuaian tarif retribusi pasar, parkir, dan tempat rekreasi."
             },
+            // CONTOH 3: RTRW
             {
                 "nomor": "05",
                 "tahun": "2023",
-                "judul": "RTRW 2023-2043",
+                "judul": "Rencana Tata Ruang Wilayah (RTRW) 2023-2043",
                 "kategori": "Tata Ruang",
                 "status": "Berlaku",
                 "tanggal": "10 Mei 2023",
-                "deskripsi": "Rencana Tata Ruang Wilayah Kabupaten Jeneponto jangka panjang."
+                "deskripsi": "Panduan penggunaan lahan untuk pembangunan jangka panjang."
             }
+            // 👇 TAMBAHKAN DATA BARU DI BAWAH SINI (jangan lupa koma di akhir kurung kurawal })
         ];
+        // =====================================================================
 
         // 2. FUNGSI ISI DROPDOWN OTOMATIS
         function setupFilters() {
             const tahunSet = new Set();
             const kategoriSet = new Set();
             
-            // Ambil semua tahun dan kategori unik dari data
             allData.forEach(item => {
                 tahunSet.add(item.tahun);
                 kategoriSet.add(item.kategori);
@@ -192,12 +194,9 @@
             const selectTahun = document.getElementById('filterTahun');
             const selectKategori = document.getElementById('filterKategori');
 
-            // Urutkan tahun (terbaru dulu) dan masukkan ke dropdown
             [...tahunSet].sort().reverse().forEach(t => {
                 selectTahun.innerHTML += `<option value="${t}">${t}</option>`;
             });
-
-            // Urutkan kategori (A-Z) dan masukkan ke dropdown
             [...kategoriSet].sort().forEach(k => {
                 selectKategori.innerHTML += `<option value="${k}">${k}</option>`;
             });
@@ -206,18 +205,16 @@
         // 3. FUNGSI MENAMPILKAN DATA KE LAYAR
         function renderPerda(list) {
             const container = document.getElementById('containerPerda');
-            container.innerHTML = ''; // Bersihkan layar dulu
+            container.innerHTML = ''; 
 
             if (list.length === 0) {
-                container.innerHTML = '<p style="text-align:center; padding:20px; color:#666;">Tidak ada data yang cocok dengan pencarian.</p>';
+                container.innerHTML = '<p style="text-align:center; padding:20px; color:#666;">Tidak ada data yang cocok.</p>';
                 return;
             }
 
             list.forEach(item => {
-                // Tentukan warna badge status
                 const statusClass = item.status === 'Berlaku' ? 'tag-status-ok' : 'tag-status-no';
                 
-                // Buat HTML untuk satu kartu Perda
                 const html = `
                     <div class="perda-card">
                         <div class="perda-title">Perda No. ${item.nomor} Tahun ${item.tahun}</div>
@@ -234,36 +231,29 @@
             });
         }
 
-        // 4. LOGIKA FILTER GABUNGAN (Search + Dropdown)
+        // 4. LOGIKA FILTER GABUNGAN
         function applyFilters() {
             const keyword = document.getElementById('searchInput').value.toLowerCase();
             const tahun = document.getElementById('filterTahun').value;
             const kategori = document.getElementById('filterKategori').value;
 
             const filtered = allData.filter(item => {
-                // Cek apakah teks cocok dengan pencarian
                 const matchKeyword = item.judul.toLowerCase().includes(keyword) || 
                                      item.nomor.includes(keyword) ||
                                      item.deskripsi.toLowerCase().includes(keyword);
-                
-                // Cek apakah tahun cocok (atau kosong berarti semua)
                 const matchTahun = tahun === "" || item.tahun === tahun;
-                
-                // Cek apakah kategori cocok (atau kosong berarti semua)
                 const matchKategori = kategori === "" || item.kategori === kategori;
-
-                // Tampilkan hanya jika SEMUA syarat terpenuhi
                 return matchKeyword && matchTahun && matchKategori;
             });
 
             renderPerda(filtered);
         }
 
-        // JALANKAN SAAT WEBSITE PERTAMA KALI DIBUKA
-        setupFilters();       // Isi dropdown
-        renderPerda(allData); // Tampilkan semua data awal
+        // JALANKAN SAAT WEBSITE DIBUKA
+        setupFilters();
+        renderPerda(allData);
 
-        // PASANG "PENDENGAR" AGAR FILTER BERJALAN SAAT DIKLIK/DIKETIK
+        // PASANG EVENT LISTENER
         document.getElementById('searchInput').addEventListener('input', applyFilters);
         document.getElementById('filterTahun').addEventListener('change', applyFilters);
         document.getElementById('filterKategori').addEventListener('change', applyFilters);
