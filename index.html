@@ -1,29 +1,105 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Katalog Perda - Kabupaten Jeneponto</title>
+    <style>
+        /* CSS TAMPILAN */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; background: #f4f6f9; color: #333; line-height: 1.6; }
+        
+        header { 
+            background: linear-gradient(135deg, #1e3a8a, #2563eb); 
+            color: white; padding: 30px 20px; text-align: center; 
+        }
+        header h1 { font-size: 2rem; margin-bottom: 5px; }
+        
+        main { max-width: 900px; margin: 30px auto; padding: 20px; }
+        
+        /* KOTAK FILTER */
+        .filter-box {
+            background: white; padding: 20px; border-radius: 10px; 
+            box-shadow: 0 2px 6px rgba(0,0,0,0.08); margin-bottom: 20px;
+            display: grid; gap: 15px; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        }
+        input, select {
+            width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 1rem;
+        }
+        
+        /* LIST PERDA */
+        .perda-list { display: grid; gap: 15px; }
+        .perda-card {
+            background: white; padding: 20px; border-radius: 8px; border-left: 5px solid #2563eb;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05); transition: transform 0.2s;
+        }
+        .perda-card:hover { transform: translateY(-2px); box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        .perda-title { color: #1e3a8a; font-size: 1.1rem; font-weight: bold; margin-bottom: 8px; }
+        .meta-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 10px; font-size: 0.85rem; }
+        .tag { padding: 3px 10px; border-radius: 12px; font-weight: 600; }
+        .tag-cat { background: #e0f2fe; color: #0369a1; }
+        .tag-status-ok { background: #dcfce7; color: #15803d; }
+        .tag-status-no { background: #fee2e2; color: #b91c1c; }
+        .desc { color: #475569; font-size: 0.95rem; }
+        
+        footer { background: #1e3a8a; color: white; text-align: center; padding: 20px; margin-top: 40px; }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Katalog Peraturan Daerah</h1>
+    <p>Sekretariat DPRD Kabupaten Jeneponto</p>
+</header>
+
+<main>
+    <!-- BAGIAN FILTER -->
+    <div class="filter-box">
+        <input type="text" id="searchInput" placeholder="🔍 Cari judul atau nomor...">
+        <select id="filterTahun"><option value="">Semua Tahun</option></select>
+        <select id="filterKategori"><option value="">Semua Kategori</option></select>
+    </div>
+
+    <!-- TEMPAT DAFTAR PERDA MUNCUL -->
+    <div id="containerPerda" class="perda-list"></div>
+</main>
+
+<footer>
+    <p>&copy; 2026 Sekretariat DPRD Kabupaten Jeneponto</p>
+</footer>
+
+<!-- JAVASCRIPT LOGIC (DATA SUDAH DIGABUNG DI SINI) -->
 <script>
-    let allData = []; 
+    // 1. DATA PERDA LANGSUNG DI DALAM KODE (TIDAK PERLU FETCH)
+    const allData = [
+        {
+            "nomor": "01", "tahun": "2024", 
+            "judul": "APBD Tahun Anggaran 2025", 
+            "kategori": "APBD", "status": "Berlaku", 
+            "tanggal": "20 Desember 2024", 
+            "deskripsi": "Anggaran Pendapatan dan Belanja Daerah."
+        },
+        {
+            "nomor": "02", "tahun": "2024", 
+            "judul": "Retribusi Daerah", 
+            "kategori": "Retribusi", "status": "Berlaku", 
+            "tanggal": "15 Agustus 2024", 
+            "deskripsi": "Retribusi jasa umum dan usaha."
+        },
+        {
+            "nomor": "05", "tahun": "2023", 
+            "judul": "RTRW 2023-2043", 
+            "kategori": "Tata Ruang", "status": "Berlaku", 
+            "tanggal": "10 Mei 2023", 
+            "deskripsi": "Rencana Tata Ruang Wilayah."
+        }
+    ];
 
-    // 1. Ambil data dari file data.json
-    fetch('data.json')
-        .then(response => {
-            if (!response.ok) throw new Error("File data.json tidak ditemukan");
-            return response.json();
-        })
-        .then(data => {
-            allData = data;
-            setupFilters(data); 
-            renderPerda(data);  
-        })
-        .catch(error => {
-            console.error('Gagal load data:', error);
-            document.getElementById('containerPerda').innerHTML = 
-                '<p style="color:red; text-align:center;">Gagal memuat data. Pastikan file data.json sudah diupload.</p>';
-        });
-
-    // 2. Fungsi isi Dropdown
-    function setupFilters(data) {
+    // 2. FUNGSI ISI DROPDOWN OTOMATIS
+    function setupFilters() {
         const tahunSet = new Set();
         const kategoriSet = new Set();
-
-        data.forEach(item => {
+        allData.forEach(item => {
             tahunSet.add(item.tahun);
             kategoriSet.add(item.kategori);
         });
@@ -31,20 +107,15 @@
         const selectTahun = document.getElementById('filterTahun');
         const selectKategori = document.getElementById('filterKategori');
 
-        // Kosongkan dulu opsi default selain "Semua"
-        selectTahun.innerHTML = '<option value="">Semua Tahun</option>';
-        selectKategori.innerHTML = '<option value="">Semua Kategori</option>';
-
         [...tahunSet].sort().reverse().forEach(t => {
             selectTahun.innerHTML += `<option value="${t}">${t}</option>`;
         });
-
         [...kategoriSet].sort().forEach(k => {
             selectKategori.innerHTML += `<option value="${k}">${k}</option>`;
         });
     }
 
-    // 3. Fungsi Tampilkan Data
+    // 3. FUNGSI TAMPILKAN DATA
     function renderPerda(list) {
         const container = document.getElementById('containerPerda');
         container.innerHTML = ''; 
@@ -56,7 +127,6 @@
 
         list.forEach(item => {
             const statusClass = item.status === 'Berlaku' ? 'tag-status-ok' : 'tag-status-no';
-            
             const html = `
                 <div class="perda-card">
                     <div class="perda-title">Perda No. ${item.nomor} Tahun ${item.tahun}</div>
@@ -64,7 +134,7 @@
                     <div class="meta-tags">
                         <span class="tag tag-cat">${item.kategori}</span>
                         <span class="tag ${statusClass}">${item.status}</span>
-                        <span style="color:#64748b;"> ${item.tanggal}</span>
+                        <span style="color:#64748b;">📅 ${item.tanggal}</span>
                     </div>
                     <div class="desc">${item.deskripsi}</div>
                 </div>
@@ -73,25 +143,10 @@
         });
     }
 
-    // 4. Logika Filter
+    // 4. LOGIKA FILTER
     function applyFilters() {
         const keyword = document.getElementById('searchInput').value.toLowerCase();
         const tahun = document.getElementById('filterTahun').value;
         const kategori = document.getElementById('filterKategori').value;
 
-        const filtered = allData.filter(item => {
-            const matchKeyword = item.judul.toLowerCase().includes(keyword) || 
-                                 item.nomor.includes(keyword);
-            const matchTahun = tahun === "" || item.tahun === tahun;
-            const matchKategori = kategori === "" || item.kategori === kategori;
-
-            return matchKeyword && matchTahun && matchKategori;
-        });
-
-        renderPerda(filtered);
-    }
-
-    document.getElementById('searchInput').addEventListener('input', applyFilters);
-    document.getElementById('filterTahun').addEventListener('change', applyFilters);
-    document.getElementById('filterKategori').addEventListener('change', applyFilters);
-</script>
+        const filtered
