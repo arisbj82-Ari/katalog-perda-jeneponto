@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Katalog Perda - Kabupaten Jeneponto</title>
     <style>
-        /* CSS TAMPILAN */
+        /* CSS TAMPILAN PROFESIONAL */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Segoe UI', Tahoma, sans-serif; background: #f4f6f9; color: #333; line-height: 1.6; }
         
@@ -33,15 +33,37 @@
         
         .desc { color: #475569; font-size: 0.95rem; margin-bottom: 15px; }
         
-        /* TOMBOL BACA DOKUMEN */
-        .btn-baca { 
-            display: inline-block; padding: 8px 16px; background: #2563eb; color: white; 
-            text-decoration: none; border-radius: 6px; font-size: 0.9rem; font-weight: 600; 
-        }
+        .btn-baca { display: inline-block; padding: 8px 16px; background: #2563eb; color: white; text-decoration: none; border-radius: 6px; font-size: 0.9rem; font-weight: 600; }
         .btn-baca:hover { background: #1e3a8a; }
         .txt-kosong { color: #94a3b8; font-style: italic; font-size: 0.9rem; }
 
         footer { background: #1e3a8a; color: white; text-align: center; padding: 20px; margin-top: 40px; }
+        
+        /* Tombol Admin Tersembunyi */
+        #adminBtn { 
+            position: fixed; bottom: 20px; right: 20px; background: #333; color: white; 
+            border: none; padding: 10px 15px; border-radius: 50px; cursor: pointer; 
+            opacity: 0.3; font-size: 0.8rem; z-index: 100; transition: opacity 0.3s;
+        }
+        #adminBtn:hover { opacity: 1; }
+
+        /* Modal Login Admin */
+        .modal { 
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+            background: rgba(0,0,0,0.6); justify-content: center; align-items: center; z-index: 1000; 
+        }
+        .modal-content { 
+            background: white; padding: 30px; border-radius: 12px; width: 90%; max-width: 400px; 
+            text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.2); 
+        }
+        .modal h3 { color: #1e3a8a; margin-bottom: 10px; }
+        .modal p { font-size: 0.9rem; color: #666; margin-bottom: 15px; }
+        .modal input { margin: 10px 0; width: 100%; }
+        .modal button { 
+            background: #2563eb; color: white; border: none; padding: 10px 20px; 
+            border-radius: 6px; cursor: pointer; width: 100%; font-size: 1rem; margin-top: 5px;
+        }
+        .modal button.secondary { background: #cbd5e1; color: #333; margin-top: 10px; }
     </style>
 </head>
 <body>
@@ -58,52 +80,78 @@
         <select id="filterKategori"><option value="">Semua Kategori</option></select>
     </div>
 
-    <div id="containerPerda" class="perda-list"></div>
+    <div id="containerPerda" class="perda-list">
+        <p style="text-align:center; padding:20px; color:#666;">⏳ Sedang memuat data dari database...</p>
+    </div>
 </main>
 
 <footer>
     <p>&copy; 2026 Sekretariat DPRD Kabupaten Jeneponto</p>
 </footer>
 
+<!-- Tombol Admin Rahasia -->
+<button id="adminBtn" onclick="openAdmin()">⚙️ Admin</button>
+
+<!-- Modal Login Admin -->
+<div id="loginModal" class="modal">
+    <div class="modal-content">
+        <h3>Login Administrator</h3>
+        <p>Masukkan password untuk akses panel admin.</p>
+        <input type="password" id="adminPass" placeholder="Password Admin">
+        <button onclick="checkLogin()">Masuk</button>
+        <button class="secondary" onclick="closeAdmin()">Batal</button>
+    </div>
+</div>
+
 <script>
     // =====================================================================
-    // ⚠️ AREA DATA - EDIT DI SINI SAJA UNTUK TAMBAH PERDA BARU
+    // KONFIGURASI SISTEM
     // =====================================================================
-    const allData = [
-        {
-            "nomor": "06",
-            "tahun": "2024",
-            "judul": "APBD Kabupaten Jeneponto TA 2025",
-            "kategori": "APBD",
-            "status": "Berlaku",
-            "tanggal": "20 Desember 2024",
-            "deskripsi": "Anggaran Pendapatan dan Belanja Daerah.",
-            "link_pdf": "" // KOSONGKAN JIKA BELUM ADA FILE PDF
-        },
-        {
-            "nomor": "02",
-            "tahun": "2024",
-            "judul": "Retribusi Jasa Umum",
-            "kategori": "Retribusi",
-            "status": "Berlaku",
-            "tanggal": "15 Agustus 2024",
-            "deskripsi": "Tarif retribusi pasar dan parkir.",
-            "link_pdf": "https://drive.google.com/uc?export=view&id=CONTOH_ID_FILE" // GANTI DENGAN LINK PDF ANDA
-        },
-        {
-            "nomor": "05",
-            "tahun": "2023",
-            "judul": "RTRW 2023-2043",
-            "kategori": "Tata Ruang",
-            "status": "Berlaku",
-            "tanggal": "10 Mei 2023",
-            "deskripsi": "Rencana Tata Ruang Wilayah.",
-            "link_pdf": "" 
-        }
-        // 👇 COPY BLOCK DI ATAS & PASTE DI SINI UNTUK TAMBAH DATA BARU
-    ];
-    // =====================================================================
+    
+    // 1. LINK DATABASE (Sudah terpasang link Bapak/Ibu)
+    const SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vS0CMoIorlD5U1wz9-iEbbYytlJ9DwXjbRYNmWUQ23g9Pdr2PuHUpLLUOCbMkN5t0H1fsDqrVENuKPb/pub?gid=0&single=true&output=csv"; 
+    
+    // 2. PASSWORD ADMIN (Bisa diganti sesuai keinginan)
+    const ADMIN_PASSWORD = "jeneponto2026"; 
 
+    let allData = [];
+
+    // 3. FUNGSI AMBIL DATA DARI GOOGLE SHEETS
+    async function loadData() {
+        try {
+            const response = await fetch(SHEET_CSV_URL);
+            if (!response.ok) throw new Error("Gagal mengambil data");
+            
+            const csvText = await response.text();
+            const rows = csvText.split('\n').slice(1); // Lewati baris header
+            
+            allData = rows.map(row => {
+                // Parse CSV sederhana (handle koma dalam kutip)
+                const cols = row.match(/(".*?"|[^",\s]+)(?=\s*,|\s*$)/g) || [];
+                const clean = (val) => val ? val.replace(/^"|"$/g, '').trim() : '';
+                
+                return {
+                    nomor: clean(cols[0]),
+                    tahun: clean(cols[1]),
+                    judul: clean(cols[2]),
+                    kategori: clean(cols[3]),
+                    status: clean(cols[4]),
+                    tanggal: clean(cols[5]),
+                    deskripsi: clean(cols[6]),
+                    link_pdf: clean(cols[7])
+                };
+            }).filter(item => item.nomor && item.judul); // Filter baris kosong
+
+            setupFilters();
+            renderPerda(allData);
+        } catch (error) {
+            document.getElementById('containerPerda').innerHTML = 
+                `<p style="color:red; text-align:center;">❌ Gagal memuat data.<br>Pastikan Link CSV Google Sheets benar dan sudah di-Publish.</p>`;
+            console.error(error);
+        }
+    }
+
+    // 4. FUNGSI FILTER & RENDER
     function setupFilters() {
         const tSet = new Set(); const kSet = new Set();
         allData.forEach(i => { if(i.tahun) tSet.add(i.tahun); if(i.kategori) kSet.add(i.kategori); });
@@ -118,8 +166,7 @@
         
         list.forEach(item => {
             const sc = item.status === 'Berlaku' ? 'tag-ok' : 'tag-no';
-            // LOGIKA TOMBOL: Jika link_pdf ada isinya, munculkan tombol. Jika kosong, munculkan teks.
-            const btnHtml = (item.link_pdf && item.link_pdf.trim() !== "") 
+            const btnHtml = (item.link_pdf && item.link_pdf.trim() !== "" && item.link_pdf !== "-") 
                 ? `<a href="${item.link_pdf}" target="_blank" class="btn-baca">📄 Baca Dokumen</a>` 
                 : `<span class="txt-kosong">Dokumen belum tersedia</span>`;
 
@@ -150,12 +197,30 @@
         renderPerda(filtered);
     }
 
+    // 5. LOGIKA ADMIN SEDERHANA
+    function openAdmin() { document.getElementById('loginModal').style.display = 'flex'; }
+    function closeAdmin() { document.getElementById('loginModal').style.display = 'none'; document.getElementById('adminPass').value = ''; }
+    
+    function checkLogin() {
+        const pass = document.getElementById('adminPass').value;
+        if (pass === ADMIN_PASSWORD) {
+            // Ambil link edit sheet dari link csv
+            const editLink = SHEET_CSV_URL.replace('/pub?gid=0&single=true&output=csv', '/edit');
+            alert(`✅ Login Berhasil!\n\nSilakan klik OK untuk membuka Database Google Sheets.\nTambah/Edit data di sana, lalu refresh website.`);
+            window.open(editLink, '_blank');
+            closeAdmin();
+        } else {
+            alert("❌ Password Salah!");
+        }
+    }
+
+    // Event Listeners
     document.getElementById('searchInput').addEventListener('input', applyFilters);
     document.getElementById('filterTahun').addEventListener('change', applyFilters);
     document.getElementById('filterKategori').addEventListener('change', applyFilters);
 
-    setupFilters();
-    renderPerda(allData);
+    // Jalankan saat load
+    loadData();
 </script>
 
 </body>
