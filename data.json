@@ -1,0 +1,38 @@
+[
+  {
+    "nomor": "01",
+    "tahun": "2024",
+    "judul": "Anggaran Pendapatan dan Belanja Daerah (APBD) Tahun Anggaran 2025",
+    "kategori": "APBD",
+    "status": "Berlaku",
+    "tanggal": "20 Desember 2024",
+    "deskripsi": "Mengatur alokasi anggaran daerah untuk pembangunan Jeneponto tahun 2025."
+  },
+  {
+    "nomor": "02",
+    "tahun": "2024",
+    "judul": "Retribusi Jasa Umum dan Usaha Daerah",
+    "kategori": "Retribusi",
+    "status": "Berlaku",
+    "tanggal": "15 Agustus 2024",
+    "deskripsi": "Penyesuaian tarif retribusi pasar, parkir, dan tempat rekreasi."
+  },
+  {
+    "nomor": "05",
+    "tahun": "2023",
+    "judul": "Rencana Tata Ruang Wilayah (RTRW) 2023-2043",
+    "kategori": "Tata Ruang",
+    "status": "Berlaku",
+    "tanggal": "10 Mei 2023",
+    "deskripsi": "Peta panduan penggunaan lahan untuk 20 tahun ke depan."
+  },
+  {
+    "nomor": "08",
+    "tahun": "2022",
+    "judul": "Pengelolaan Sampah Berbasis Masyarakat",
+    "kategori": "Lingkungan",
+    "status": "Dicabut",
+    "tanggal": "12 Januari 2022",
+    "deskripsi": "Perda lama tentang sampah yang telah diganti dengan regulasi baru."
+  }
+]
