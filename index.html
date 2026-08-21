@@ -90,7 +90,7 @@
 </footer>
 
 <!-- Tombol Admin Rahasia -->
-<button id="adminBtn" onclick="openAdmin()">⚙️ Admin</button>
+<button id="adminBtn" onclick="openAdmin()">️ Admin</button>
 
 <!-- Modal Login Admin -->
 <div id="loginModal" class="modal">
@@ -108,15 +108,19 @@
     // KONFIGURASI SISTEM
     // =====================================================================
     
-    // 1. LINK DATABASE (Sudah terpasang link Bapak/Ibu)
+    // 1. LINK DATABASE CSV (Sudah terpasang link Bapak/Ibu)
     const SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vS0CMoIorlD5U1wz9-iEbbYytlJ9DwXjbRYNmWUQ23g9Pdr2PuHUpLLUOCbMkN5t0H1fsDqrVENuKPb/pub?gid=0&single=true&output=csv"; 
     
-    // 2. PASSWORD ADMIN (Bisa diganti sesuai keinginan)
+    // 2. LINK EDIT GOOGLE SHEETS (Untuk Tombol Admin)
+    // ID Spreadsheet diambil dari link CSV di atas
+    const SHEET_EDIT_URL = "https://docs.google.com/spreadsheets/d/2PACX-1vS0CMoIorlD5U1wz9-iEbbYytlJ9DwXjbRYNmWUQ23g9Pdr2PuHUpLLUOCbMkN5t0H1fsDqrVENuKPb/edit";
+
+    // 3. PASSWORD ADMIN (Bisa diganti sesuai keinginan)
     const ADMIN_PASSWORD = "jeneponto2026"; 
 
     let allData = [];
 
-    // 3. FUNGSI AMBIL DATA DARI GOOGLE SHEETS
+    // 4. FUNGSI AMBIL DATA DARI GOOGLE SHEETS
     async function loadData() {
         try {
             const response = await fetch(SHEET_CSV_URL);
@@ -151,7 +155,7 @@
         }
     }
 
-    // 4. FUNGSI FILTER & RENDER
+    // 5. FUNGSI FILTER & RENDER
     function setupFilters() {
         const tSet = new Set(); const kSet = new Set();
         allData.forEach(i => { if(i.tahun) tSet.add(i.tahun); if(i.kategori) kSet.add(i.kategori); });
@@ -177,7 +181,7 @@
                     <div class="meta-tags">
                         <span class="tag tag-cat">${item.kategori}</span>
                         <span class="tag ${sc}">${item.status}</span>
-                        <span style="color:#64748b;">📅 ${item.tanggal}</span>
+                        <span style="color:#64748b;"> ${item.tanggal}</span>
                     </div>
                     <div class="desc">${item.deskripsi}</div>
                     ${btnHtml}
@@ -197,17 +201,15 @@
         renderPerda(filtered);
     }
 
-    // 5. LOGIKA ADMIN SEDERHANA
+    // 6. LOGIKA ADMIN (SUDAH DIPERBAIKI)
     function openAdmin() { document.getElementById('loginModal').style.display = 'flex'; }
     function closeAdmin() { document.getElementById('loginModal').style.display = 'none'; document.getElementById('adminPass').value = ''; }
     
     function checkLogin() {
         const pass = document.getElementById('adminPass').value;
         if (pass === ADMIN_PASSWORD) {
-            // Ambil link edit sheet dari link csv
-            const editLink = SHEET_CSV_URL.replace('/pub?gid=0&single=true&output=csv', '/edit');
-            alert(`✅ Login Berhasil!\n\nSilakan klik OK untuk membuka Database Google Sheets.\nTambah/Edit data di sana, lalu refresh website.`);
-            window.open(editLink, '_blank');
+            alert(`✅ Login Berhasil!\n\nAnda akan diarahkan ke Database Google Sheets.\nSilakan tambah/edit data di sana.`);
+            window.open(SHEET_EDIT_URL, '_blank');
             closeAdmin();
         } else {
             alert("❌ Password Salah!");
